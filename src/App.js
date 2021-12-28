@@ -8,6 +8,7 @@ import Particles from "react-tsparticles";
 import Clarifai, { COLOR_MODEL } from "clarifai";
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register'
 
 const particleOptions = {
   fpsLimit: 60,
@@ -101,7 +102,8 @@ class App extends Component {
     this.state = {
       input: '',
       imageUrl: '',
-      box: {}
+      box: {},
+      route: 'signin'
     }
   }
 
@@ -124,6 +126,10 @@ class App extends Component {
     this.setState({box: pos});
   }
 
+  onRouteChange = (route) => {
+    this.setState({route: route});
+  }
+
   onInputChange = (event) => {
     this.setState({input: event.target.value});
   }
@@ -139,12 +145,20 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <SignIn />        
-        <Navigation />
-        <Logo />
-        <Rank />
-        <ImageLinkForm onInputChange={this.onInputChange} onClickDetect={this.onClickDetect} /> 
-        <FaceRecognition boundingBox={this.state.box} inputUrl={this.state.imageUrl}/>
+        {
+        this.state.route === 'home' 
+        ? <div>
+            <Navigation onRouteChange={this.onRouteChange} />
+            <Logo />
+            <Rank />
+            <ImageLinkForm onInputChange={this.onInputChange} onClickDetect={this.onClickDetect} /> 
+            <FaceRecognition boundingBox={this.state.box} inputUrl={this.state.imageUrl}/>          
+          </div>
+        : (
+          this.state.route === 'signin' 
+          ? <SignIn onRouteChange={this.onRouteChange} /> 
+          : <Register onRouteChange={this.onRouteChange} />)
+        }        
 
         <Particles className='particles'
         id="tsparticles"
